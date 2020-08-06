@@ -19,9 +19,11 @@ function App() {
       <Provider store={store}>
         <Header />
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/page=:id" component={Home} />
-          <Route exact path="/seach=:id" component={Seach} />
+          <Route exact path={["/page=:id", "/", "/page="]} component={Home} />
+          <Route exact path="/search=:seach/page=:page" component={Seach} />
+          <Route exact path="*">
+            <p>Error 404</p>
+          </Route>
         </Switch>
         <Footer />
       </Provider>

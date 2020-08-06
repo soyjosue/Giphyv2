@@ -3,8 +3,9 @@ import {
     DESCARGAR_GIPHY_EXITO,
     DESCARGAR_GIPHY_ERROR,
     CAMBIAR_PAGE,
-    MODAL_OPEN,
-    MODAL_CLOSE
+    BUSCAR_GIPHY,
+    BUSCAR_GIPHY_EXITO,
+    BUSCAR_GIPHY_ERROR
 } from '../types';
 
 // Axios
@@ -59,4 +60,42 @@ export function nextPageGiphyAction(nextPage) {
 const nextPageGiphy = (numPage) => ({
     type: CAMBIAR_PAGE,
     payload: numPage
+});
+
+export function buscarGiphyAction(content, page) {
+
+    return async dispatch => {
+        dispatch( buscarGiphy() );
+
+        let pages = page;
+        if(!(pages === 0)) {
+            pages = pages * 10;
+        }
+
+        console.log(keyApi, content, pages);
+        try {
+            const gifs = await clienteAxios.get(`/search?api_key=${keyApi}&q=${content}&limit=10&offset=${pages}`);
+            const pagMax = gifs.data.pagination.total_count/10 > 4999 ? parseInt(4999/10): parseInt(gifs.data.pagination.total_count/10);
+            // console.log(gifs);
+            dispatch( buscarGiphyExito({gifsList: gifs.data.data, pagMax}) );
+
+        } catch (error) {
+            console.log(error);
+            dispatch( buscarGiphyError() );
+        }
+    }
+}
+const buscarGiphy = () => ({
+    type: BUSCAR_GIPHY,
+    payload: true
+}) ;
+const buscarGiphyExito = ({gifsList, pagMax, pages}) => ({
+    type: BUSCAR_GIPHY_EXITO,
+    payload: {
+        gifsList,
+        pagMax
+    }
+});
+const buscarGiphyError = () => ({
+    type: BUSCAR_GIPHY_ERROR
 });

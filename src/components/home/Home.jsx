@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import Advertlg from '../AD/Advertlg';
 import Gif from '../Gif';
@@ -14,9 +14,8 @@ import { useHistory, useParams } from 'react-router-dom';
 const Home = () => {
     let {id} = useParams();
 
-    // console.log('El id es' + id);
     const history = useHistory();
-
+    
     // Redux
     const dispath = useDispatch();
     
@@ -27,40 +26,39 @@ const Home = () => {
 
     useEffect(() => {
         if(id === undefined) {
-            dispath(obtenerGiphyAction(pageActual));
-            history.push(`/page=${pageActual+1}`);
-        } else {
-            dispath( nextPageGiphyAction(parseInt(id)) );
-            dispath(obtenerGiphyAction(pageActual));
+            history.push('/page=1');
         }
-
-        // eslint-disable-next
+       // eslint-disable-next-line 
     }, []);
 
     useEffect(() => {
-        dispath(obtenerGiphyAction(pageActual));
-        history.push(`/page=${pageActual+1}`)
-
-        // eslint-disable-next
-    }, [pageActual])
+        if(!(id === undefined)) {
+            dispath( nextPageGiphyAction(parseInt(id)-1) );
+            dispath(obtenerGiphyAction(pageActual));
+        } 
+        
+        // eslint-disable-next-line
+    }, [id])
 
     const onClickPage = e => {
 
+        let page = pageActual+1;
+
         switch(e.target.id) {
             case 'first': 
-                dispath(nextPageGiphyAction(0))
+                history.push('/page=1')
                 break;
             case 'previous':
-                dispath(nextPageGiphyAction(pageActual-1))
+                history.push(`/page=${page-1}`)
                 break;
             case 'next':
-                dispath(nextPageGiphyAction(pageActual+1))
+                history.push(`/page=${page+1}`)
                 break;
             case 'last':
-                dispath(nextPageGiphyAction(pageMax))
+                history.push(`/page=${pageMax}`)
                 break;
             default:
-                dispath(nextPageGiphyAction(parseInt(e.target.id)))
+                history.push(`/page=${parseInt(e.target.id) + 1}`)
         }
     }
     
@@ -162,7 +160,7 @@ const Home = () => {
                     }
 
                     {
-                        !(pageActual === pageMax) ? 
+                        !(pageActual === pageMax-1) ? 
                         (
                         <>
                             <div className="border py-2 px-3 ml-1"> <button className="btn p-0" id="next" onClick={onClickPage}>{'>'}</button> </div>

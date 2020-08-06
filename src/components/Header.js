@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 
 // react-router-dom
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // Imagen
 import logo from '../img/logo.png'
 
+// Redux
+
 const Header = () => {
+
+    const history = useHistory();
 
     const [ seacher, setSeacher ] = useState({
         content: ''
@@ -26,15 +30,23 @@ const Header = () => {
             return null;
         }
 
+        const seach = content.replace(/ /g, '+');
+
         // Enviar
-        console.log(content);
+        history.push(`/search=${seach}/page=1`)
+
+        // variar
+        setSeacher(
+            {...seacher,
+            content: ''}
+        )
     }
 
     return(
         <div className="container-fluid header">
             <div className="row align-items-md-baseline mt-3">
                 <div className="col-md-6 d-flex justify-content-center d-md-block">
-                    <Link to="/"><img src={logo} alt="Logo de Giphy" className="img-fluid"/></Link>
+                    <Link to="/page=1"><img src={logo} alt="Logo de Giphy" className="img-fluid"/></Link>
                 </div>
                 <div className="col-md-6 mt-2 mt-md-0">
 
@@ -64,12 +76,12 @@ const Header = () => {
             <div className="row menu">
                 <div className="col">
                     <ul className="nav nav-pills nav-fill nav-tabs">
-                    <li className="nav-item"><a href="#!" className="nav-link">Trending</a></li>
-                    <li className="nav-item"><a href="#!" className="nav-link">Ramdon</a></li>
-                    <li className="nav-item"><a href="#!" className="nav-link">Graciosos</a></li>
-                    <li className="nav-item"><a href="#!" className="nav-link">Tristes</a></li>
-                    <li className="nav-item"><a href="#!" className="nav-link">Pelea</a></li>
-                </ul>
+                        <li className="nav-item"><Link to="/page=1" className="nav-link">Trending</Link></li>
+                        <li className="nav-item"><Link to="/search=random/page=1"  className="nav-link">Random</Link></li>
+                        <li className="nav-item"><Link to="/search=graciosos/page=1"  className="nav-link">Graciosos</Link></li>
+                        <li className="nav-item"><Link to="/search=tristes/page=1"  className="nav-link">Tristes</Link></li>
+                        <li className="nav-item mt-2 mt-md-0"><Link to="/search=pelea/page=1"  className="nav-link">Pelea</Link></li>
+                    </ul>
                 </div>
             </div>
         </div>

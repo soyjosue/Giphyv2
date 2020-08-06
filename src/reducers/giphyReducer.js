@@ -3,8 +3,9 @@ import {
     DESCARGAR_GIPHY_EXITO,
     DESCARGAR_GIPHY_ERROR,
     CAMBIAR_PAGE,
-    MODAL_OPEN,
-    MODAL_CLOSE
+    BUSCAR_GIPHY,
+    BUSCAR_GIPHY_EXITO,
+    BUSCAR_GIPHY_ERROR
 } from '../types';
 
 
@@ -19,6 +20,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch(action.type) {
+        case BUSCAR_GIPHY:
         case DESCARGAR_GIPHY:
             return {
                 ...state,
@@ -32,6 +34,15 @@ export default function(state = initialState, action) {
                 loading: false,
                 error: null
             }
+        case BUSCAR_GIPHY_EXITO:
+            return {
+                ...state,
+                giphys: action.payload.gifsList,
+                pagemax: action.payload.pagMax,
+                loading: false,
+                error: null
+            }
+        case BUSCAR_GIPHY_ERROR:
         case DESCARGAR_GIPHY_ERROR:
             return {
                 ...state,
